@@ -1,11 +1,9 @@
 //
-//  LoomeAppApp.swift
+//  LoomeApp.swift
 //  LoomeApp
 //
 //  Created by Onie on 4/29/25.
 //
-
-import SwiftUI
 
 import ComposableArchitecture
 import SwiftUI

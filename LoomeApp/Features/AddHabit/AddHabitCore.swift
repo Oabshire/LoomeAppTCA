@@ -12,7 +12,9 @@ import ComposableArchitecture
 struct AddHabit {
     struct State: Equatable {}
 
-    enum Action {}
+    enum Action {
+        case settingsButtonTapped
+    }
 
     var body: some Reducer<State, Action> {
         EmptyReducer()

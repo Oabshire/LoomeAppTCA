@@ -14,38 +14,29 @@ struct MainTabView: View {
     var body: some View {
         WithViewStore(store, observe: \.selectedTab) { viewStore in
             TabView(
-                selection: viewStore.binding(
-                    send: MainTab.Action.tabSelected
-                ),
+                selection: viewStore.binding(send: MainTab.Action.tabSelected),
                 content: {
-                    HomeView(
-                        store: store.scope(
-                            state: \.home,
-                            action: \.home
-                        )
-                    )
-                    .tabItem { Label("Home", systemImage: "house") }
-                    .tag(MainTab.Tab.home)
+                    HomeView(store: store.scope(state: \.home, action: \.home))
+                        .tabItem { Label("Home", systemImage: "house") }
+                        .tag(MainTab.Tab.home)
 
-                    AddHabitView(
-                        store: store.scope(
-                            state: \.search,
-                            action: \.search
-                        )
-                    )
-                    .tabItem { Label("New", systemImage: "plus.app") }
-                    .tag(MainTab.Tab.search)
+                    AddHabitView(store: store.scope(state: \.addHabit, action: \.addHabit))
+                        .tabItem { Label("New", systemImage: "plus.app") }
+                        .tag(MainTab.Tab.addHabit)
 
-                    StatsView(
-                        store: store.scope(
-                            state: \.profile,
-                            action: \.profile
-                        )
-                    )
-                    .tabItem { Label("Stats", systemImage: "chart.xyaxis.line") }
-                    .tag(MainTab.Tab.profile)
+                    StatsView(store: store.scope(state: \.stats, action: \.stats))
+                        .tabItem { Label("Stats", systemImage: "chart.xyaxis.line") }
+                        .tag(MainTab.Tab.stats)
                 }
             )
+            .sheet(
+                store: store.scope(
+                    state: \.$userSettings,
+                    action: \.userSettings
+                )
+            ) { store in
+                UserSettingsView(store: store)
+            }
         }
     }
 }
