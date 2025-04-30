@@ -49,6 +49,11 @@
 			path = LoomeAppUITests;
 			sourceTree = "<group>";
 		};
+		09241CAE2DC1A9A200756888 /* Features */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = Features;
+			sourceTree = "<group>";
+		};
 /* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -80,6 +85,7 @@
 		09241C6B2DC1A68B00756888 = {
 			isa = PBXGroup;
 			children = (
+				09241CAE2DC1A9A200756888 /* Features */,
 				09241C762DC1A68B00756888 /* LoomeApp */,
 				09241C842DC1A68E00756888 /* LoomeAppTests */,
 				09241C8E2DC1A68E00756888 /* LoomeAppUITests */,
@@ -114,6 +120,7 @@
 			);
 			fileSystemSynchronizedGroups = (
 				09241C762DC1A68B00756888 /* LoomeApp */,
+				09241CAE2DC1A9A200756888 /* Features */,
 			);
 			name = LoomeApp;
 			packageProductDependencies = (
