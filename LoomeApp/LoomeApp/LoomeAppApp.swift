@@ -7,11 +7,21 @@
 
 import SwiftUI
 
+import ComposableArchitecture
+import SwiftUI
+
 @main
-struct LoomeAppApp: App {
+struct LoomeApp: App {
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            MainTabView(
+                store: Store(
+                    initialState: MainTab.State()
+                ) {
+                    MainTab()
+                        ._printChanges()
+                }
+            )
         }
     }
 }
