@@ -12,7 +12,18 @@ struct AddHabitView: View {
     let store: StoreOf<AddHabit>
 
     var body: some View {
-        Text("Add Habit Screen")
-            .font(.title)
+        NavigationStack {
+            Text("Add Habit Screen")
+                .navigationTitle("New Habit")
+                .toolbar {
+                    ToolbarItem(placement: .navigationBarTrailing) {
+                        Button {
+                            store.send(.settingsButtonTapped)
+                        } label: {
+                            Image(systemName: "gearshape")
+                        }
+                    }
+                }
+        }
     }
 }

@@ -12,7 +12,18 @@ struct StatsView: View {
     let store: StoreOf<Stats>
 
     var body: some View {
-        Text("Statistics Screen")
-            .font(.title)
+        NavigationStack {
+            Text("Statistics Screen")
+                .navigationTitle("Analytics")
+                .toolbar {
+                    ToolbarItem(placement: .navigationBarTrailing) {
+                        Button {
+                            store.send(.settingsButtonTapped)
+                        } label: {
+                            Image(systemName: "gearshape")
+                        }
+                    }
+                }
+        }
     }
 }

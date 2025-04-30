@@ -54,6 +54,16 @@
 			path = Features;
 			sourceTree = "<group>";
 		};
+		09E36FE92DC29DC400EE4EBE /* Shared */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = Shared;
+			sourceTree = "<group>";
+		};
+		09E370252DC2CBBB00EE4EBE /* Models */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = Models;
+			sourceTree = "<group>";
+		};
 /* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -85,6 +95,8 @@
 		09241C6B2DC1A68B00756888 = {
 			isa = PBXGroup;
 			children = (
+				09E370252DC2CBBB00EE4EBE /* Models */,
+				09E36FE92DC29DC400EE4EBE /* Shared */,
 				09241CAE2DC1A9A200756888 /* Features */,
 				09241C762DC1A68B00756888 /* LoomeApp */,
 				09241C842DC1A68E00756888 /* LoomeAppTests */,
@@ -121,6 +133,8 @@
 			fileSystemSynchronizedGroups = (
 				09241C762DC1A68B00756888 /* LoomeApp */,
 				09241CAE2DC1A9A200756888 /* Features */,
+				09E36FE92DC29DC400EE4EBE /* Shared */,
+				09E370252DC2CBBB00EE4EBE /* Models */,
 			);
 			name = LoomeApp;
 			packageProductDependencies = (

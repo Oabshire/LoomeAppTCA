@@ -12,7 +12,19 @@ struct HomeView: View {
     let store: StoreOf<Home>
 
     var body: some View {
-        Text("Home Screen")
-            .font(.title)
+        NavigationStack {
+            Text("Home Screen")
+                .navigationTitle("Home")
+                .toolbar {
+                    ToolbarItem(placement: .navigationBarTrailing) {
+                        Button {
+                            store.send(.settingsButtonTapped)
+                        } label: {
+                            Image(systemName: "gearshape")
+                        }
+                    }
+                }
+        }
     }
 }
+

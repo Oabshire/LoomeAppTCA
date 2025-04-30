@@ -13,39 +13,53 @@ struct MainTab {
     struct State: Equatable {
         var selectedTab: Tab = .home
         var home = Home.State()
-        var search = AddHabit.State()
-        var profile = Stats.State()
+        var addHabit = AddHabit.State()
+        var stats = Stats.State()
+
+        @PresentationState var userSettings: UserSettings.State?
     }
 
     enum Action {
         case tabSelected(Tab)
         case home(Home.Action)
-        case search(AddHabit.Action)
-        case profile(Stats.Action)
+        case addHabit(AddHabit.Action)
+        case stats(Stats.Action)
+        case userSettings(PresentationAction<UserSettings.Action>)
     }
 
+
     enum Tab: Int {
-        case home, search, profile
+        case home, addHabit, stats
     }
 
     var body: some ReducerOf<Self> {
         Reduce { state, action in
             switch action {
-            case let .tabSelected(tab):
-                state.selectedTab = tab
+
+            case .home(.settingsButtonTapped),
+                    .addHabit(.settingsButtonTapped),
+                    .stats(.settingsButtonTapped):
+                state.userSettings = UserSettings.State()
+                return .none
+
+            case .userSettings(.presented(.closeButtonTapped)):
+                state.userSettings = nil
                 return .none
 
             default:
                 return .none
             }
         }
+        .ifLet(\.$userSettings, action: \.userSettings) {
+            UserSettings()
+        }
         Scope(state: \.home, action: \.home) {
             Home()
         }
-        Scope(state: \.search, action: \.search) {
+        Scope(state: \.addHabit, action: \.addHabit) {
             AddHabit()
         }
-        Scope(state: \.profile, action: \.profile) {
+        Scope(state: \.stats, action: \.stats) {
             Stats()
         }
     }
