@@ -9,21 +9,12 @@ import SwiftUI
 import ComposableArchitecture
 
 struct StatsView: View {
-    let store: StoreOf<Stats>
+    let store: StoreOf<StatsFeature>
 
     var body: some View {
         NavigationStack {
             Text("Statistics Screen")
                 .navigationTitle("Analytics")
-                .toolbar {
-                    ToolbarItem(placement: .navigationBarTrailing) {
-                        Button {
-                            store.send(.settingsButtonTapped)
-                        } label: {
-                            Image(systemName: "gearshape")
-                        }
-                    }
-                }
         }
     }
 }

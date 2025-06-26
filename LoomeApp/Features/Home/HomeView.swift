@@ -9,22 +9,49 @@ import SwiftUI
 import ComposableArchitecture
 
 struct HomeView: View {
-    let store: StoreOf<Home>
+    @Bindable var store: StoreOf<HomeFeature>
 
     var body: some View {
         NavigationStack {
-            Text("Home Screen")
-                .navigationTitle("Home")
-                .toolbar {
-                    ToolbarItem(placement: .navigationBarTrailing) {
-                        Button {
-                            store.send(.settingsButtonTapped)
-                        } label: {
-                            Image(systemName: "gearshape")
-                        }
+            List {
+                ForEach(store.habits) { habit in
+                    Text(habit.name)
+                }
+            }
+            .navigationTitle("Habits")
+            .toolbar {
+                ToolbarItem {
+                    Button {
+                        store.send(.addButtonTapped)
+                    } label: {
+                        Image(systemName: "plus")
                     }
                 }
+            }
+        }
+        .sheet(
+            item: $store.scope(state: \.addHabit, action: \.addHabit)
+        ) { addHabitStore in
+            NavigationStack {
+                AddHabitView(store: addHabitStore)
+            }
         }
     }
 }
 
+
+#Preview {
+    HomeView(
+        store: Store(
+            initialState: HomeFeature.State(
+                habits: [
+                    Habit(id: UUID(), name: "Exercise"),
+                    Habit(id: UUID(), name: "BrushTeeth"),
+                    Habit(id: UUID(), name: "DrinkWater"),
+                ]
+            )
+        ) {
+            HomeFeature()
+        }
+    )
+}

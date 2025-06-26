@@ -9,21 +9,38 @@ import SwiftUI
 import ComposableArchitecture
 
 struct AddHabitView: View {
-    let store: StoreOf<AddHabit>
+    @Bindable var store: StoreOf<AddHabitFeature>
 
     var body: some View {
-        NavigationStack {
-            Text("Add Habit Screen")
-                .navigationTitle("New Habit")
-                .toolbar {
-                    ToolbarItem(placement: .navigationBarTrailing) {
-                        Button {
-                            store.send(.settingsButtonTapped)
-                        } label: {
-                            Image(systemName: "gearshape")
-                        }
-                    }
+        Form {
+            TextField("Name", text: $store.habit.name.sending(\.setName))
+            Button("Save") {
+                store.send(.saveButtonTapped)
+            }
+        }
+        .toolbar {
+            ToolbarItem {
+                Button("Cancel") {
+                    store.send(.cancelButtonTapped)
                 }
+            }
         }
     }
+}
+
+#Preview {
+  NavigationStack {
+      AddHabitView(
+      store: Store(
+        initialState: AddHabitFeature.State(
+          habit: Habit(
+            id: UUID(),
+            name: "Blob"
+          )
+        )
+      ) {
+          AddHabitFeature()
+      }
+    )
+  }
 }
