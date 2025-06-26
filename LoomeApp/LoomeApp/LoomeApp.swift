@@ -10,16 +10,16 @@ import SwiftUI
 
 @main
 struct LoomeApp: App {
+    static let store = Store(initialState: MainTabFeature.State()) {
+        MainTabFeature()
+          ._printChanges()
+      }
+
     var body: some Scene {
         WindowGroup {
             MainTabView(
-                store: Store(
-                    initialState: MainTab.State()
-                ) {
-                    MainTab()
-                        ._printChanges()
-                }
-            )
+                store: LoomeApp.store)
         }
     }
 }
+

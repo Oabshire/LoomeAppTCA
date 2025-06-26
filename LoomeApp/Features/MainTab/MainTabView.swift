@@ -9,34 +9,20 @@ import SwiftUI
 import ComposableArchitecture
 
 struct MainTabView: View {
-    let store: StoreOf<MainTab>
+    let store: StoreOf<MainTabFeature>
 
     var body: some View {
-        WithViewStore(store, observe: \.selectedTab) { viewStore in
-            TabView(
-                selection: viewStore.binding(send: MainTab.Action.tabSelected),
-                content: {
-                    HomeView(store: store.scope(state: \.home, action: \.home))
-                        .tabItem { Label("Home", systemImage: "house") }
-                        .tag(MainTab.Tab.home)
-
-                    AddHabitView(store: store.scope(state: \.addHabit, action: \.addHabit))
-                        .tabItem { Label("New", systemImage: "plus.app") }
-                        .tag(MainTab.Tab.addHabit)
-
-                    StatsView(store: store.scope(state: \.stats, action: \.stats))
-                        .tabItem { Label("Stats", systemImage: "chart.xyaxis.line") }
-                        .tag(MainTab.Tab.stats)
-                }
-            )
-            .sheet(
-                store: store.scope(
-                    state: \.$userSettings,
-                    action: \.userSettings
-                )
-            ) { store in
-                UserSettingsView(store: store)
+        TabView {
+            Tab("Home", systemImage: "house") {
+                HomeView(store: store.scope(state: \.homeTab, action: \.homeTab))
+            }
+            Tab("Stats", systemImage: "chart.xyaxis.line") {
+                StatsView(store: store.scope(state: \.statsTab, action: \.statsTab))
+            }
+            Tab("Settings", systemImage: "gearshape") {
+                SettingsView(store: store.scope(state: \.settingsTab, action: \.settingsTab))
             }
         }
     }
 }
+
