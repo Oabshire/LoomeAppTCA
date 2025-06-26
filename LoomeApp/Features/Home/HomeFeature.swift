@@ -34,15 +34,8 @@ struct HomeFeature {
                 )
                 return .none
 
-            case .addHabit(.presented(.cancelButtonTapped)):
-                state.addHabit = nil
-                return .none
-
-            case .addHabit(.presented(.saveButtonTapped)):
-                guard let habit = state.addHabit?.habit
-                else { return .none }
+            case let .addHabit(.presented(.delegate(.saveHabit(habit)))):
                 state.habits.append(habit)
-                state.addHabit = nil
                 return .none
 
 
