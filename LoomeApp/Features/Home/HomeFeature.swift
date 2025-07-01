@@ -18,33 +18,66 @@ struct Habit: Equatable, Identifiable {
 struct HomeFeature {
     @ObservableState
     struct State: Equatable {
-        @Presents var addHabit: AddHabitFeature.State?
+        @Presents var destination: Destination.State?
         var habits: IdentifiedArrayOf<Habit> = []
     }
     enum Action {
         case addButtonTapped
-        case addHabit(PresentationAction<AddHabitFeature.Action>)
+        case deleteButtonTapped(id: Habit.ID)
+        case destination(PresentationAction<Destination.Action>)
+
+        enum Alert: Equatable {
+            case confirmDeletion(id: Habit.ID)
+        }
     }
     var body: some ReducerOf<Self> {
         Reduce { state, action in
             switch action {
             case .addButtonTapped:
-                state.addHabit = AddHabitFeature.State(
-                    habit: Habit(id: UUID(), name: "")
+                state.destination = .addHabit(
+                    AddHabitFeature.State(
+                        habit: Habit(id: UUID(), name: "")
+                    )
                 )
                 return .none
 
-            case let .addHabit(.presented(.delegate(.saveHabit(habit)))):
+            case let .destination(.presented(.addHabit(.delegate(.saveHabit(habit))))):
                 state.habits.append(habit)
                 return .none
 
 
-            case .addHabit:
+            case let .destination(.presented(.alert(.confirmDeletion(id: id)))):
+                state.habits.remove(id: id)
+                return .none
+
+            case .destination:
+                return .none
+
+            case let .deleteButtonTapped(id: id):
+                state.destination = .alert(
+                    AlertState {
+                        TextState("Are you sure?")
+                    } actions: {
+                        ButtonState(role: .destructive, action: .confirmDeletion(id: id)) {
+                            TextState("Delete")
+                        }
+                    }
+                )
                 return .none
             }
         }
-        .ifLet(\.$addHabit, action: \.addHabit) {
-            AddHabitFeature()
+        .ifLet(\.$destination, action: \.destination) {
+            Destination.body
         }
     }
 }
+
+extension HomeFeature {
+    @Reducer
+    enum Destination {
+        case addHabit(AddHabitFeature)
+        case alert(AlertState<HomeFeature.Action.Alert>)
+    }
+}
+
+extension HomeFeature.Destination.State: Equatable {}
