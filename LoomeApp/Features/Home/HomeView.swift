@@ -15,7 +15,16 @@ struct HomeView: View {
         NavigationStack {
             List {
                 ForEach(store.habits) { habit in
-                    Text(habit.name)
+                    HStack {
+                        Text(habit.name)
+                        Spacer()
+                        Button {
+                            store.send(.deleteButtonTapped(id: habit.id))
+                        } label: {
+                            Image(systemName: "trash")
+                                .foregroundColor(.red)
+                        }
+                    }
                 }
             }
             .navigationTitle("Habits")
@@ -30,12 +39,13 @@ struct HomeView: View {
             }
         }
         .sheet(
-            item: $store.scope(state: \.addHabit, action: \.addHabit)
+            item: $store.scope(state: \.destination?.addHabit, action: \.destination.addHabit)
         ) { addHabitStore in
             NavigationStack {
                 AddHabitView(store: addHabitStore)
             }
         }
+        .alert($store.scope(state: \.destination?.alert, action: \.destination.alert))
     }
 }
 
