@@ -43,7 +43,7 @@ struct AddHabitFeature {
                 }
 
             case let .setName(name):
-                state.habit.name = name
+                state.habit.title = name
                 return .none
             }
         }

@@ -16,7 +16,7 @@ struct HomeView: View {
             List {
                 ForEach(store.habits) { habit in
                     HStack {
-                        Text(habit.name)
+                        Text(habit.title)
                         Spacer()
                         Button {
                             store.send(.deleteButtonTapped(id: habit.id))
@@ -55,9 +55,9 @@ struct HomeView: View {
         store: Store(
             initialState: HomeFeature.State(
                 habits: [
-                    Habit(id: UUID(), name: "Exercise"),
-                    Habit(id: UUID(), name: "BrushTeeth"),
-                    Habit(id: UUID(), name: "DrinkWater"),
+                    Habit(id: UUID(), title: "Exercise"),
+                    Habit(id: UUID(), title: "BrushTeeth"),
+                    Habit(id: UUID(), title: "DrinkWater"),
                 ]
             )
         ) {
