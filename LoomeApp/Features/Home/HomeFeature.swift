@@ -30,13 +30,16 @@ struct HomeFeature {
             case confirmDeletion(id: Habit.ID)
         }
     }
+
+    @Dependency(\.uuid) var uuid
+
     var body: some ReducerOf<Self> {
         Reduce { state, action in
             switch action {
             case .addButtonTapped:
                 state.destination = .addHabit(
                     AddHabitFeature.State(
-                        habit: Habit(id: UUID(), name: "")
+                        habit: Habit(id: self.uuid(), name: "")
                     )
                 )
                 return .none

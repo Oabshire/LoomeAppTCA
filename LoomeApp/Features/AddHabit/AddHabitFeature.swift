@@ -19,6 +19,7 @@ struct AddHabitFeature {
         case cancelButtonTapped
         case saveButtonTapped
         case setName(String)
+        @CasePathable
         enum Delegate: Equatable {
             case saveHabit(Habit)
         }
