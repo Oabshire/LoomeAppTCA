@@ -16,6 +16,9 @@ struct MainTabView: View {
             Tab("Home", systemImage: "house") {
                 HomeView(store: store.scope(state: \.homeTab, action: \.homeTab))
             }
+            Tab("Habits", systemImage: "list.bullet") {
+                AllHabitsView(store: store.scope(state: \.allHabitsTab, action: \.allHabitsTab))
+            }
             Tab("Stats", systemImage: "chart.xyaxis.line") {
                 StatsView(store: store.scope(state: \.statsTab, action: \.statsTab))
             }

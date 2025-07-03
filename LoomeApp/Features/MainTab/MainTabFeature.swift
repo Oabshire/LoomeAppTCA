@@ -12,12 +12,14 @@ import ComposableArchitecture
 struct MainTabFeature {
     struct State {
         var homeTab = HomeFeature.State()
+        var allHabitsTab = AllHabitsFeature.State()
         var statsTab = StatsFeature.State()
         var settingsTab = SettingsFeature.State()
     }
 
     enum Action {
         case homeTab(HomeFeature.Action)
+        case allHabitsTab(AllHabitsFeature.Action)
         case statsTab(StatsFeature.Action)
         case settingsTab(SettingsFeature.Action)
     }
@@ -25,6 +27,9 @@ struct MainTabFeature {
     var body: some ReducerOf<Self> {
         Scope(state: \.homeTab, action: \.homeTab) {
             HomeFeature()
+        }
+        Scope(state: \.allHabitsTab, action: \.allHabitsTab) {
+            AllHabitsFeature()
         }
         Scope(state: \.statsTab,action: \.statsTab) {
             StatsFeature()
