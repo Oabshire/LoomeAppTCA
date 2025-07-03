@@ -9,11 +9,6 @@ import Foundation
 import ComposableArchitecture
 
 
-struct Habit: Equatable, Identifiable {
-    let id: UUID
-    var name: String
-}
-
 @Reducer
 struct HomeFeature {
     @ObservableState
@@ -39,7 +34,7 @@ struct HomeFeature {
             case .addButtonTapped:
                 state.destination = .addHabit(
                     AddHabitFeature.State(
-                        habit: Habit(id: self.uuid(), name: "")
+                        habit: Habit(id: self.uuid(), title: "")
                     )
                 )
                 return .none

@@ -13,7 +13,6 @@ import Testing
 @testable import LoomeApp
 
 
-
 @MainActor
 struct HomeFeatureTests {
     @Test
@@ -27,23 +26,23 @@ struct HomeFeatureTests {
         await store.send(.addButtonTapped) {
             $0.destination = .addHabit(
                 AddHabitFeature.State(
-                    habit: Habit(id:  UUID(0), name: "")
+                    habit: Habit(id:  UUID(0), title: "")
                 )
             )
         }
 
         await store.send(\.destination.addHabit.setName, "Drink Water") {
-            $0.destination?.modify(\.addHabit) { $0.habit.name = "Drink Water" }
+            $0.destination?.modify(\.addHabit) { $0.habit.title = "Drink Water" }
         }
 
         await store.send(\.destination.addHabit.saveButtonTapped)
 
         await store.receive(
           \.destination.addHabit.delegate.saveHabit,
-          Habit(id: UUID(0), name: "Drink Water")
+          Habit(id: UUID(0), title: "Drink Water")
         ) {
             $0.habits = [
-                    Habit(id: UUID(0), name: "Drink Water")
+                    Habit(id: UUID(0), title: "Drink Water")
                   ]
         }
         await store.receive(\.destination.dismiss) {

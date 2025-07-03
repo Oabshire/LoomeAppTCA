@@ -13,7 +13,7 @@ struct AddHabitView: View {
 
     var body: some View {
         Form {
-            TextField("Name", text: $store.habit.name.sending(\.setName))
+            TextField("Name", text: $store.habit.title.sending(\.setName))
             Button("Save") {
                 store.send(.saveButtonTapped)
             }
@@ -35,7 +35,7 @@ struct AddHabitView: View {
         initialState: AddHabitFeature.State(
           habit: Habit(
             id: UUID(),
-            name: "Blob"
+            title: "Blob"
           )
         )
       ) {
