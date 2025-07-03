@@ -1,34 +1,26 @@
 //
-//  HomeView.swift
+//  AllHabitsView.swift
 //  LoomeApp
 //
-//  Created by Onie on 4/29/25.
+//  Created by Onie on 7/3/25.
 //
 
 import SwiftUI
 import ComposableArchitecture
 
-struct HomeView: View {
-    @Bindable var store: StoreOf<HomeFeature>
+struct AllHabitsView: View {
+    @Bindable var store: StoreOf<AllHabitsFeature>
 
     var body: some View {
-        NavigationStack {
+        NavigationStack(path: $store.scope(state: \.path, action: \.path)) {
             List {
                 ForEach(store.habits) { habit in
-                    HStack {
+                    NavigationLink(state: HabitDetailFeature.State(habit: habit)) {
                         Text(habit.title)
-                        Spacer()
-                        Button(action: {
-                            store.send(.markAsDoneTapped(id: habit.id))
-                        }) {
-                            Image(systemName: habit.isCompletedToday ? "checkmark.circle.fill" : "circle")
-                                .resizable()
-                                .frame(width: 24, height: 24)
-                                .foregroundColor(habit.isCompletedToday ? .green : .gray)
-                        }
                     }
+                    .buttonStyle(.borderless)
+                  }
                 }
-            }
             .navigationTitle("Habits")
             .toolbar {
                 ToolbarItem {
@@ -39,7 +31,9 @@ struct HomeView: View {
                     }
                 }
             }
-        }
+        } destination: { store in
+             HabitDetailView(store: store)
+           }
         .sheet(
             item: $store.scope(state: \.destination?.addHabit, action: \.destination.addHabit)
         ) { addHabitStore in
@@ -47,15 +41,14 @@ struct HomeView: View {
                 AddHabitView(store: addHabitStore)
             }
         }
-        .alert($store.scope(state: \.destination?.alert, action: \.destination.alert))
     }
 }
 
 
 #Preview {
-    HomeView(
+    AllHabitsView(
         store: Store(
-            initialState: HomeFeature.State(
+            initialState: AllHabitsFeature.State(
                 habits: [
                     Habit(id: UUID(), title: "Exercise"),
                     Habit(id: UUID(), title: "BrushTeeth"),
@@ -63,7 +56,7 @@ struct HomeView: View {
                 ]
             )
         ) {
-            HomeFeature()
+            AllHabitsFeature()
         }
     )
 }

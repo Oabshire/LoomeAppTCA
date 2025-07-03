@@ -1,27 +1,28 @@
 //
-//  HomeFeature.swift
+//  AllHabitsFeature.swift
 //  LoomeApp
 //
-//  Created by Onie on 4/29/25.
+//  Created by Onie on 7/3/25.
 //
 
 import Foundation
 import ComposableArchitecture
 
-
 @Reducer
-struct HomeFeature {
+struct AllHabitsFeature {
     @ObservableState
-    struct State: Equatable {
+    struct State {
         @Presents var destination: Destination.State?
         var habits: IdentifiedArrayOf<Habit> = []
+        var path = StackState<HabitDetailFeature.State>()
     }
+
     enum Action {
         case addButtonTapped
-        case markAsDoneTapped(id: Habit.ID)
-        case deleteButtonTapped(id: Habit.ID)
         case destination(PresentationAction<Destination.Action>)
+        case path(StackActionOf<HabitDetailFeature>)
 
+        @CasePathable
         enum Alert: Equatable {
             case confirmDeletion(id: Habit.ID)
         }
@@ -44,7 +45,6 @@ struct HomeFeature {
                 state.habits.append(habit)
                 return .none
 
-
             case let .destination(.presented(.alert(.confirmDeletion(id: id)))):
                 state.habits.remove(id: id)
                 return .none
@@ -52,38 +52,30 @@ struct HomeFeature {
             case .destination:
                 return .none
 
-            case .markAsDoneTapped(let id):
-                if let index = state.habits.firstIndex(where: { $0.id == id }) {
-                    let today = Calendar.current.startOfDay(for: Date())
-                    state.habits[index].completionHistory.insert(today)
-                }
+            case let .path(.element(id: id, action: .delegate(.confirmDeletion))):
+                guard let detailState = state.path[id: id]
+                else { return .none }
+                state.habits.remove(id: detailState.habit.id)
                 return .none
 
-            case let .deleteButtonTapped(id: id):
-                state.destination = .alert(
-                    AlertState {
-                        TextState("Are you sure?")
-                    } actions: {
-                        ButtonState(role: .destructive, action: .confirmDeletion(id: id)) {
-                            TextState("Delete")
-                        }
-                    }
-                )
+            case .path:
                 return .none
             }
         }
         .ifLet(\.$destination, action: \.destination) {
             Destination.body
         }
+        .forEach(\.path, action: \.path) {
+            HabitDetailFeature()
+        }
     }
 }
-
-extension HomeFeature {
+extension AllHabitsFeature {
     @Reducer
     enum Destination {
         case addHabit(AddHabitFeature)
-        case alert(AlertState<HomeFeature.Action.Alert>)
+        case alert(AlertState<AllHabitsFeature.Action.Alert>)
     }
 }
 
-extension HomeFeature.Destination.State: Equatable {}
+extension AllHabitsFeature.Destination.State: Equatable {}
