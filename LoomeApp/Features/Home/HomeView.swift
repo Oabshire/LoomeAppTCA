@@ -29,7 +29,7 @@ struct HomeView: View {
                     }
                 }
             }
-            .navigationTitle("Habits")
+            .navigationTitle("Today")
             .toolbar {
                 ToolbarItem {
                     Button {
@@ -47,7 +47,6 @@ struct HomeView: View {
                 AddHabitView(store: addHabitStore)
             }
         }
-        .alert($store.scope(state: \.destination?.alert, action: \.destination.alert))
     }
 }
 

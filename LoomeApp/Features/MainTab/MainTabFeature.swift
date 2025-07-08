@@ -11,6 +11,7 @@ import ComposableArchitecture
 @Reducer
 struct MainTabFeature {
     struct State {
+        var habits: IdentifiedArrayOf<Habit> = []
         var homeTab = HomeFeature.State()
         var allHabitsTab = AllHabitsFeature.State()
         var statsTab = StatsFeature.State()
@@ -22,6 +23,8 @@ struct MainTabFeature {
         case allHabitsTab(AllHabitsFeature.Action)
         case statsTab(StatsFeature.Action)
         case settingsTab(SettingsFeature.Action)
+
+        case syncHabits
     }
 
     var body: some ReducerOf<Self> {
@@ -38,8 +41,28 @@ struct MainTabFeature {
             SettingsFeature()
         }
         Reduce { state, action in
-            // Core logic of the app feature
-            return .none
+            switch action {
+            case let .homeTab(.delegate(.addHabit(habit))):
+                state.habits.append(habit)
+                return  .send(.syncHabits)
+
+            case let .allHabitsTab(.delegate(.addHabit(habit))):
+                state.habits.append(habit)
+                return  .send(.syncHabits)
+
+            case let .allHabitsTab(.delegate(.deleteHabit(id))):
+                state.habits.remove(id: id)
+                print(state.habits)
+                return .send(.syncHabits)
+
+            case .syncHabits:
+                print(state.habits)
+                state.homeTab.habits = state.habits.filter { !$0.isArchived }
+                state.allHabitsTab.habits = state.habits
+                return .none
+            default:
+                return .none
+            }
         }
     }
 }
