@@ -19,61 +19,45 @@ struct HomeFeature {
     enum Action {
         case addButtonTapped
         case markAsDoneTapped(id: Habit.ID)
-        case deleteButtonTapped(id: Habit.ID)
         case destination(PresentationAction<Destination.Action>)
-
-        enum Alert: Equatable {
-            case confirmDeletion(id: Habit.ID)
+        case delegate(Delegate)
+        
+        enum Delegate: Equatable {
+            case addHabit(Habit)
+            case deleteHabit(Habit.ID)
         }
     }
-
+    
     @Dependency(\.uuid) var uuid
-
+    
     var body: some ReducerOf<Self> {
         Reduce { state, action in
             switch action {
             case .addButtonTapped:
                 state.destination = .addHabit(
-                    AddHabitFeature.State(
-                        habit: Habit(id: self.uuid(), title: "")
-                    )
+                    AddHabitFeature.State(habit: Habit(id: uuid(), title: ""))
                 )
                 return .none
-
+                
             case let .destination(.presented(.addHabit(.delegate(.saveHabit(habit))))):
-                state.habits.append(habit)
-                return .none
-
-
-            case let .destination(.presented(.alert(.confirmDeletion(id: id)))):
-                state.habits.remove(id: id)
-                return .none
-
-            case .destination:
-                return .none
-
+                return .send(.delegate(.addHabit(habit)))
+                
             case .markAsDoneTapped(let id):
                 if let index = state.habits.firstIndex(where: { $0.id == id }) {
                     let today = Calendar.current.startOfDay(for: Date())
                     state.habits[index].completionHistory.insert(today)
                 }
                 return .none
-
-            case let .deleteButtonTapped(id: id):
-                state.destination = .alert(
-                    AlertState {
-                        TextState("Are you sure?")
-                    } actions: {
-                        ButtonState(role: .destructive, action: .confirmDeletion(id: id)) {
-                            TextState("Delete")
-                        }
-                    }
-                )
+                
+            case .destination:
+                return .none
+            case .delegate(_):
                 return .none
             }
         }
         .ifLet(\.$destination, action: \.destination) {
             Destination.body
+            
         }
     }
 }
@@ -82,8 +66,8 @@ extension HomeFeature {
     @Reducer
     enum Destination {
         case addHabit(AddHabitFeature)
-        case alert(AlertState<HomeFeature.Action.Alert>)
     }
 }
 
 extension HomeFeature.Destination.State: Equatable {}
+

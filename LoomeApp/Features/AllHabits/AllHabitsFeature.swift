@@ -21,7 +21,12 @@ struct AllHabitsFeature {
         case addButtonTapped
         case destination(PresentationAction<Destination.Action>)
         case path(StackActionOf<HabitDetailFeature>)
+        case delegate(Delegate)
 
+        enum Delegate: Equatable {
+            case addHabit(Habit)
+            case deleteHabit(Habit.ID)
+        }
         @CasePathable
         enum Alert: Equatable {
             case confirmDeletion(id: Habit.ID)
@@ -35,30 +40,23 @@ struct AllHabitsFeature {
             switch action {
             case .addButtonTapped:
                 state.destination = .addHabit(
-                    AddHabitFeature.State(
-                        habit: Habit(id: self.uuid(), title: "")
-                    )
+                    AddHabitFeature.State(habit: Habit(id: uuid(), title: ""))
                 )
                 return .none
 
             case let .destination(.presented(.addHabit(.delegate(.saveHabit(habit))))):
-                state.habits.append(habit)
-                return .none
-
-            case let .destination(.presented(.alert(.confirmDeletion(id: id)))):
-                state.habits.remove(id: id)
-                return .none
-
-            case .destination:
-                return .none
+                return .send(.delegate(.addHabit(habit)))
 
             case let .path(.element(id: id, action: .delegate(.confirmDeletion))):
                 guard let detailState = state.path[id: id]
                 else { return .none }
-                state.habits.remove(id: detailState.habit.id)
-                return .none
+                return .send(.delegate(.deleteHabit(detailState.habit.id)))
 
+            case .destination:
+                return .none
             case .path:
+                return .none
+            case .delegate(_):
                 return .none
             }
         }
