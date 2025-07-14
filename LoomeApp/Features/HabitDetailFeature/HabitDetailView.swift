@@ -14,8 +14,8 @@ struct HabitDetailView: View {
     var body: some View {
         Form {
             Button("Delete") {
-                   store.send(.deleteButtonTapped)
-                 }
+                store.send(.deleteButtonTapped)
+            }
         }
         .navigationTitle(Text(store.habit.title))
         .alert($store.scope(state: \.alert, action: \.alert))

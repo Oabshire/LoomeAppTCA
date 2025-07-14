@@ -19,27 +19,12 @@ struct AllHabitsView: View {
                         Text(habit.title)
                     }
                     .buttonStyle(.borderless)
-                  }
                 }
+            }
             .navigationTitle("Habits")
-            .toolbar {
-                ToolbarItem {
-                    Button {
-                        store.send(.addButtonTapped)
-                    } label: {
-                        Image(systemName: "plus")
-                    }
-                }
-            }
+
         } destination: { store in
-             HabitDetailView(store: store)
-           }
-        .sheet(
-            item: $store.scope(state: \.destination?.addHabit, action: \.destination.addHabit)
-        ) { addHabitStore in
-            NavigationStack {
-                AddHabitView(store: addHabitStore)
-            }
+            HabitDetailView(store: store)
         }
     }
 }
