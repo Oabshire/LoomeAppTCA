@@ -18,7 +18,7 @@ struct Habit: Identifiable, Equatable {
     var isArchived: Bool
     var levels: [HabitLevel]
 
-    var completionHistory: Set<Date>
+    var completionHistory: [Date: HabitLevel?]
 
 
     init(
@@ -29,8 +29,8 @@ struct Habit: Identifiable, Equatable {
         finishDate: Date? = nil,
         frequency: Frequency = .daily,
         isArchived: Bool = false,
-        levels: [HabitLevel] = HabitLevel.defaultLevels,
-        completionHistory: Set<Date> = []
+        levels: [HabitLevel] = [.standart],
+        completionHistory: [Date: HabitLevel?] = [:]
     ) {
         self.id = id
         self.title = title
@@ -43,8 +43,8 @@ struct Habit: Identifiable, Equatable {
     }
 
     var isCompletedToday: Bool {
-        return completionHistory.contains { date in
-            Calendar.current.isDateInToday(date)
+        return completionHistory.contains { completion in
+            Calendar.current.isDateInToday(completion.key)
         }
     }
 }

@@ -25,7 +25,7 @@ struct HomeFeature {
             case .markAsDoneTapped(let id):
                 if let index = state.habits.firstIndex(where: { $0.id == id }) {
                     let today = Calendar.current.startOfDay(for: Date())
-                    state.habits[index].completionHistory.insert(today)
+                    state.habits[index].completionHistory[today] = .standart
                 }
                 return .none
             }

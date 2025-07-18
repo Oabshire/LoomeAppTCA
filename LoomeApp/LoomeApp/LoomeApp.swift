@@ -6,6 +6,7 @@
 //
 
 import ComposableArchitecture
+import SwiftData
 import SwiftUI
 
 @main
@@ -15,10 +16,21 @@ struct LoomeApp: App {
           ._printChanges()
       }
 
+    @Dependency(\.databaseService) var databaseService
+    var modelContext: ModelContext {
+        guard let modelContext = try? self.databaseService.context() else {
+            fatalError("Could not find modelcontext")
+        }
+        return modelContext
+    }
+
+
     var body: some Scene {
         WindowGroup {
             MainTabView(
-                store: LoomeApp.store)
+                store: LoomeApp.store
+            )
+            .modelContext(self.modelContext)
         }
     }
 }

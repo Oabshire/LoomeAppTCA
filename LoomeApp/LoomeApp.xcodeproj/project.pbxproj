@@ -34,6 +34,11 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
+		091D51342E29A732009595A2 /* SwiftData */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = SwiftData;
+			sourceTree = "<group>";
+		};
 		09241C762DC1A68B00756888 /* LoomeApp */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			path = LoomeApp;
@@ -95,6 +100,7 @@
 		09241C6B2DC1A68B00756888 = {
 			isa = PBXGroup;
 			children = (
+				091D51342E29A732009595A2 /* SwiftData */,
 				09E370252DC2CBBB00EE4EBE /* Models */,
 				09E36FE92DC29DC400EE4EBE /* Shared */,
 				09241CAE2DC1A9A200756888 /* Features */,
@@ -131,6 +137,7 @@
 			dependencies = (
 			);
 			fileSystemSynchronizedGroups = (
+				091D51342E29A732009595A2 /* SwiftData */,
 				09241C762DC1A68B00756888 /* LoomeApp */,
 				09241CAE2DC1A9A200756888 /* Features */,
 				09E36FE92DC29DC400EE4EBE /* Shared */,

@@ -7,13 +7,11 @@
 
 import Foundation
 
-enum Frequency: Equatable {
+enum Frequency: Equatable, Codable {
+
     case daily
     case weekly
+    case mounthly
     case custom(daysOfWeek: [Weekday])
-
-    enum FrequencyType: String {
-        case daily, weekly, mounthly, custom
-    }
 }
 

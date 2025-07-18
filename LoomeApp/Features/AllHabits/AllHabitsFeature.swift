@@ -22,6 +22,8 @@ struct AllHabitsFeature {
         case path(StackActionOf<HabitDetailFeature>)
         case delegate(Delegate)
 
+        case onApear
+
         enum Delegate: Equatable {
             case deleteHabit(Habit.ID)
         }
@@ -46,6 +48,9 @@ struct AllHabitsFeature {
             case .path:
                 return .none
             case .delegate(_):
+                return .none
+
+            case .onApear:
                 return .none
             }
         }
