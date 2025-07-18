@@ -12,35 +12,31 @@ struct AddHabitView: View {
     @Bindable var store: StoreOf<AddHabitFeature>
 
     var body: some View {
-        Form {
-            TextField("Name", text: $store.habit.title.sending(\.setName))
-            Button("Save") {
-                store.send(.saveButtonTapped)
-            }
-        }
-        .toolbar {
-            ToolbarItem {
-                Button("Cancel") {
-                    store.send(.cancelButtonTapped)
+        NavigationStack {
+            Form {
+                TextField("Name", text: $store.habit.title.sending(\.setName))
+                Button("Save") {
+                    store.send(.saveButtonTapped)
                 }
             }
+            .navigationTitle("New habit")
         }
     }
 }
 
 #Preview {
-  NavigationStack {
-      AddHabitView(
-      store: Store(
-        initialState: AddHabitFeature.State(
-          habit: Habit(
-            id: UUID(),
-            title: "Blob"
-          )
+    NavigationStack {
+        AddHabitView(
+            store: Store(
+                initialState: AddHabitFeature.State(
+                    habit: Habit(
+                        id: UUID(),
+                        title: "Blob"
+                    )
+                )
+            ) {
+                AddHabitFeature()
+            }
         )
-      ) {
-          AddHabitFeature()
-      }
-    )
-  }
+    }
 }

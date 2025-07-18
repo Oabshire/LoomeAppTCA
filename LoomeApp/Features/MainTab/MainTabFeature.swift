@@ -10,12 +10,23 @@ import ComposableArchitecture
 
 @Reducer
 struct MainTabFeature {
+    enum Tab {
+        case home
+        case habits
+        case stats
+        case settings
+        case addHabit
+    }
+
     struct State {
+        var selectedTab: Tab = .home
+
         var habits: IdentifiedArrayOf<Habit> = []
         var homeTab = HomeFeature.State()
         var allHabitsTab = AllHabitsFeature.State()
         var statsTab = StatsFeature.State()
         var settingsTab = SettingsFeature.State()
+        var addHabitTab = AddHabitFeature.State(habit: Habit(id: UUID(), title: ""))
     }
 
     enum Action {
@@ -23,9 +34,14 @@ struct MainTabFeature {
         case allHabitsTab(AllHabitsFeature.Action)
         case statsTab(StatsFeature.Action)
         case settingsTab(SettingsFeature.Action)
+        case addHabitTab(AddHabitFeature.Action)
+
+        case selectedTabChanged(Tab)
 
         case syncHabits
     }
+
+    @Dependency(\.uuid) var uuid
 
     var body: some ReducerOf<Self> {
         Scope(state: \.homeTab, action: \.homeTab) {
@@ -40,20 +56,35 @@ struct MainTabFeature {
         Scope(state: \.settingsTab, action: \.settingsTab) {
             SettingsFeature()
         }
+        Scope(state:\.addHabitTab, action: \.addHabitTab){
+            AddHabitFeature()
+        }
         Reduce { state, action in
             switch action {
-            case let .homeTab(.delegate(.addHabit(habit))):
-                state.habits.append(habit)
-                return  .send(.syncHabits)
-
-            case let .allHabitsTab(.delegate(.addHabit(habit))):
-                state.habits.append(habit)
-                return  .send(.syncHabits)
 
             case let .allHabitsTab(.delegate(.deleteHabit(id))):
                 state.habits.remove(id: id)
                 print(state.habits)
                 return .send(.syncHabits)
+
+            case let .addHabitTab(.delegate(.saveHabit(habit))):
+                state.habits.append(habit)
+                return .concatenate(
+                    .send(.syncHabits),
+                    .send(.selectedTabChanged(.home))
+                )
+
+            case .selectedTabChanged(let tab):
+                state.selectedTab = tab
+
+                // State needs to be recreated in order to create new habit ID  each time user taps on AddHabit tab 
+                if tab == .addHabit {
+                    state.addHabitTab = AddHabitFeature.State(
+                        habit: Habit(id: uuid(), title: "")
+                    )
+                }
+
+                return .none
 
             case .syncHabits:
                 print(state.habits)

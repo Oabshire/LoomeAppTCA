@@ -30,22 +30,6 @@ struct HomeView: View {
                 }
             }
             .navigationTitle("Today")
-            .toolbar {
-                ToolbarItem {
-                    Button {
-                        store.send(.addButtonTapped)
-                    } label: {
-                        Image(systemName: "plus")
-                    }
-                }
-            }
-        }
-        .sheet(
-            item: $store.scope(state: \.destination?.addHabit, action: \.destination.addHabit)
-        ) { addHabitStore in
-            NavigationStack {
-                AddHabitView(store: addHabitStore)
-            }
         }
     }
 }

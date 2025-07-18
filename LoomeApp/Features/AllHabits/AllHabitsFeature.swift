@@ -18,13 +18,11 @@ struct AllHabitsFeature {
     }
 
     enum Action {
-        case addButtonTapped
         case destination(PresentationAction<Destination.Action>)
         case path(StackActionOf<HabitDetailFeature>)
         case delegate(Delegate)
 
         enum Delegate: Equatable {
-            case addHabit(Habit)
             case deleteHabit(Habit.ID)
         }
         @CasePathable
@@ -38,15 +36,6 @@ struct AllHabitsFeature {
     var body: some ReducerOf<Self> {
         Reduce { state, action in
             switch action {
-            case .addButtonTapped:
-                state.destination = .addHabit(
-                    AddHabitFeature.State(habit: Habit(id: uuid(), title: ""))
-                )
-                return .none
-
-            case let .destination(.presented(.addHabit(.delegate(.saveHabit(habit))))):
-                return .send(.delegate(.addHabit(habit)))
-
             case let .path(.element(id: id, action: .delegate(.confirmDeletion))):
                 guard let detailState = state.path[id: id]
                 else { return .none }
@@ -71,7 +60,6 @@ struct AllHabitsFeature {
 extension AllHabitsFeature {
     @Reducer
     enum Destination {
-        case addHabit(AddHabitFeature)
         case alert(AlertState<AllHabitsFeature.Action.Alert>)
     }
 }
