@@ -29,10 +29,12 @@ struct MainTabView: View {
                 Tab("Settings", systemImage: "gearshape", value: .settings) {
                     SettingsView(store: store.scope(state: \.settingsTab, action: \.settingsTab))
                 }
-
                 Tab("NewHabit", systemImage: "plus", value: .addHabit, role: .search) {
                     AddHabitView(store: store.scope(state: \.addHabitTab, action: \.addHabitTab))
                 }
+            }
+            .onAppear {
+                viewStore.send(.onApear)
             }
         }
     }

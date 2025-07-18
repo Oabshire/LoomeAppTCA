@@ -22,7 +22,9 @@ struct AllHabitsView: View {
                 }
             }
             .navigationTitle("Habits")
-
+            .onAppear {
+                store.send(.onApear)
+            }
         } destination: { store in
             HabitDetailView(store: store)
         }

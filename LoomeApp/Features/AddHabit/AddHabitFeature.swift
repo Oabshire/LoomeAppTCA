@@ -16,7 +16,6 @@ struct AddHabitFeature {
     }
     enum Action {
         case delegate(Delegate)
-        case cancelButtonTapped
         case saveButtonTapped
         case setName(String)
         @CasePathable
@@ -25,21 +24,15 @@ struct AddHabitFeature {
         }
     }
 
-    @Dependency(\.dismiss) var dismiss
-
     var body: some ReducerOf<Self> {
         Reduce { state, action in
             switch action {
             case .delegate:
                 return .none
 
-            case .cancelButtonTapped:
-                return .run { _ in await self.dismiss() }
-
             case .saveButtonTapped:
                 return .run { [habit = state.habit] send in
                     await send(.delegate(.saveHabit(habit)))
-                    await self.dismiss()
                 }
 
             case let .setName(name):
